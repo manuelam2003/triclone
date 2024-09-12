@@ -59,6 +59,13 @@ CREATE TABLE settlements (
     CHECK (payer_id != payee_id)
 );
 
+CREATE TABLE tokens (
+    hash bytea PRIMARY KEY,
+    user_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
+    expiry timestamp(0) with time zone NOT NULL,
+    scope text NOT NULL
+);
+
 CREATE INDEX idx_group_id ON group_members(group_id);
 CREATE INDEX idx_expense_id ON expense_participants(expense_id);
 CREATE INDEX idx_group_expenses ON expenses(group_id);

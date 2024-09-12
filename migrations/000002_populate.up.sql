@@ -1,9 +1,9 @@
 INSERT INTO users (name, email, password_hash)
 VALUES
-('Alice Johnson', 'alice@example.com', 'passwordhash1'),
-('Bob Smith', 'bob@example.com', 'passwordhash2'),
-('Charlie Brown', 'charlie@example.com', 'passwordhash3'),
-('David Lee', 'david@example.com', 'passwordhash4');
+('Alice Johnson', 'alice@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G'), -- contra es password
+('Bob Smith', 'bob@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G'),
+('Charlie Brown', 'charlie@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G'),
+('David Lee', 'david@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G');
 
 INSERT INTO groups (name, created_by)
 VALUES

@@ -15,6 +15,8 @@ func (app *application) routes() http.Handler {
 
 	router.HandlerFunc(http.MethodGet, "/v1/healthcheck", app.healthcheckHandler)
 
+	router.HandlerFunc(http.MethodPost, "/v1/users", app.createUserHandler)
+
 	router.HandlerFunc(http.MethodGet, "/v1/groups", app.listGroupsHandler)
 	router.HandlerFunc(http.MethodPost, "/v1/groups", app.createGroupHandler)
 	router.HandlerFunc(http.MethodGet, "/v1/groups/:group_id", app.showGroupHandler)
