@@ -24,5 +24,7 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPatch, "/v1/groups/:group_id", app.updateGroupHandler)
 	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id", app.deleteGroupHandler)
 
-	return app.recoverPanic(app.rateLimit(router))
+	router.HandlerFunc(http.MethodPost, "/v1/tokens/authentication", app.createAuthenticationTokenHandler)
+
+	return app.recoverPanic(app.rateLimit(app.authenticate(router)))
 }
