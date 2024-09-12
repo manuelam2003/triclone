@@ -4,7 +4,7 @@ CREATE TABLE users (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     password_hash bytea NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -13,7 +13,7 @@ CREATE TABLE groups (
     group_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     created_by INT REFERENCES users(user_id) ON DELETE SET NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -23,7 +23,7 @@ CREATE TABLE group_members (
     group_id INT REFERENCES groups(group_id) ON DELETE CASCADE,
     user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (group_id, user_id)
 );
 
@@ -34,7 +34,7 @@ CREATE TABLE expenses (
     amount NUMERIC(10, 2) NOT NULL,
     description VARCHAR(255),
     paid_by INT REFERENCES users(user_id) ON DELETE SET NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE expense_participants (
     expense_id INT REFERENCES expenses(expense_id) ON DELETE CASCADE,
     user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
     amount_owed NUMERIC(10, 2) NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (expense_id, user_id)
 );
 

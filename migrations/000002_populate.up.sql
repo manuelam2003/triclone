@@ -5,7 +5,7 @@ VALUES
 ('Charlie Brown', 'charlie@example.com', 'passwordhash3'),
 ('David Lee', 'david@example.com', 'passwordhash4');
 
-INSERT INTO groups (group_name, created_by)
+INSERT INTO groups (name, created_by)
 VALUES
 ('Weekend Trip', 1),
 ('Office Lunch', 2);

@@ -21,7 +21,7 @@ confirm:
 ## run/api: run the cmd/api application
 .PHONY: run/api
 run/api:
-	@go run ./cmd/api -db-dsn=${GREENLIGHT_DB_DSN}
+	@go run ./cmd/api -db-dsn=${TRICLONE_DB_DSN}
 
 ## docker-run: run docker compose container
 .PHONY: docker-run
@@ -36,7 +36,7 @@ docker-down:
 ## db/psql: connect to the database using psql
 .PHONY: db/psql
 db/psql:
-	@docker exec -it greenlight-psql-1 psql -h localhost -p 5432 -U greenlight -d greenlight
+	@docker exec -it triclone-psql-1 psql -h localhost -p 5432 -U triclone -d triclone
 
 ## db/migrations/new name=$1: create a new database migration
 .PHONY: db/migrations/new
@@ -48,7 +48,14 @@ db/migrations/new:
 .PHONY: db/migrations/up
 db/migrations/up: confirm
 	@echo 'Running up migrations...'
-	migrate -path ./migrations -database ${GREENLIGHT_DB_DSN} up
+	migrate -path ./migrations -database ${TRICLONE_DB_DSN} up
+
+.PHONY: db/reset
+db/reset:
+	@docker compose down --volumes
+	@docker compose up -d
+	@sleep 3
+	@migrate -path ./migrations -database ${TRICLONE_DB_DSN} up
 
 # ==================================================================================== #
 # QUALITY CONTROL
