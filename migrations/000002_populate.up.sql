@@ -1,9 +1,9 @@
-INSERT INTO users (name, email, password_hash)
+INSERT INTO users (name, email, password_hash, activated)
 VALUES
-('Alice Johnson', 'alice@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G'), -- contra es password
-('Bob Smith', 'bob@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G'),
-('Charlie Brown', 'charlie@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G'),
-('David Lee', 'david@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G');
+('Alice Johnson', 'alice@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G', true), -- contra es password
+('Bob Smith', 'bob@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G', false),
+('Charlie Brown', 'charlie@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G', false),
+('David Lee', 'david@example.com', '$2a$12$0lb8HkbQ7eGBE2qcTB/DMuia0fnVDjfJ0dpDXM3oSEQj.YWexpF9G', false);
 
 INSERT INTO groups (name, created_by)
 VALUES

@@ -30,7 +30,7 @@ type GroupModel struct {
 	DB *sql.DB
 }
 
-func (g GroupModel) Insert(group *Group) error {
+func (m GroupModel) Insert(group *Group) error {
 	query := `
 		INSERT INTO groups (name, created_by)
 		VALUES ($1, $2)
@@ -41,10 +41,10 @@ func (g GroupModel) Insert(group *Group) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	return g.DB.QueryRowContext(ctx, query, args...).Scan(&group.ID, &group.CreatedAt, &group.UpdatedAt)
+	return m.DB.QueryRowContext(ctx, query, args...).Scan(&group.ID, &group.CreatedAt, &group.UpdatedAt)
 }
 
-func (g GroupModel) Get(id int64) (*Group, error) {
+func (m GroupModel) Get(id int64) (*Group, error) {
 	if id < 1 {
 		return nil, ErrRecordNotFound
 	}
@@ -60,7 +60,7 @@ func (g GroupModel) Get(id int64) (*Group, error) {
 
 	defer cancel()
 
-	err := g.DB.QueryRowContext(ctx, query, id).Scan(
+	err := m.DB.QueryRowContext(ctx, query, id).Scan(
 		&group.ID,
 		&group.Name,
 		&group.CreatedBy,
@@ -80,7 +80,7 @@ func (g GroupModel) Get(id int64) (*Group, error) {
 	return &group, nil
 }
 
-func (g GroupModel) Update(group *Group) error {
+func (m GroupModel) Update(group *Group) error {
 	query := `
 		UPDATE groups
 		SET name = $1, created_by = $2, updated_at = NOW()
@@ -92,7 +92,7 @@ func (g GroupModel) Update(group *Group) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	err := g.DB.QueryRowContext(ctx, query, args...).Scan(&group.UpdatedAt)
+	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&group.UpdatedAt)
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
@@ -104,7 +104,7 @@ func (g GroupModel) Update(group *Group) error {
 	return nil
 }
 
-func (g GroupModel) Delete(id int64) error {
+func (m GroupModel) Delete(id int64) error {
 	if id < 1 {
 		return ErrRecordNotFound
 	}
@@ -116,7 +116,7 @@ func (g GroupModel) Delete(id int64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	result, err := g.DB.ExecContext(ctx, query, id)
+	result, err := m.DB.ExecContext(ctx, query, id)
 	if err != nil {
 		return err
 	}
@@ -133,7 +133,7 @@ func (g GroupModel) Delete(id int64) error {
 	return nil
 }
 
-func (g GroupModel) GetAll(name string, createdBy int64, filters Filters) ([]*Group, Metadata, error) {
+func (m GroupModel) GetAll(name string, createdBy int64, filters Filters) ([]*Group, Metadata, error) {
 	query := fmt.Sprintf(`
 		SELECT count(*) OVER(), id, name, created_by, created_at, updated_at
 		FROM groups
@@ -147,7 +147,7 @@ func (g GroupModel) GetAll(name string, createdBy int64, filters Filters) ([]*Gr
 
 	args := []any{name, createdBy, filters.limit(), filters.offset()}
 
-	rows, err := g.DB.QueryContext(ctx, query, args...)
+	rows, err := m.DB.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, Metadata{}, err
 	}
