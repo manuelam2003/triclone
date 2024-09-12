@@ -19,6 +19,7 @@ type User struct {
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Password  password  `json:"-"`
+	Activated bool      `json:"activated"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"-"`
 }
@@ -86,11 +87,11 @@ type UserModel struct {
 
 func (m UserModel) Insert(user *User) error {
 	query := `
-        INSERT INTO users (name, email, password_hash) 
-        VALUES ($1, $2, $3)
+        INSERT INTO users (name, email, password_hash, activated) 
+        VALUES ($1, $2, $3, $4)
         RETURNING id, created_at, updated_at`
 
-	args := []any{user.Name, user.Email, user.Password.hash}
+	args := []any{user.Name, user.Email, user.Password.hash, user.Activated}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -110,7 +111,7 @@ func (m UserModel) Insert(user *User) error {
 
 func (m UserModel) GetByEmail(email string) (*User, error) {
 	query := `
-        SELECT id, name, email, password_hash, created_at, updated_at
+        SELECT id, name, email, password_hash, activated, created_at, updated_at
         FROM users
         WHERE email = $1`
 
@@ -124,6 +125,7 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 		&user.Name,
 		&user.Email,
 		&user.Password.hash,
+		&user.Activated,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
@@ -143,14 +145,15 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 func (m UserModel) Update(user *User) error {
 	query := `
         UPDATE users 
-        SET name = $1, email = $2, password_hash = $3, updated_at = NOW()
-        WHERE id = $4 AND updated_at = $5
+        SET name = $1, email = $2, password_hash = $3, activated = $4, updated_at = NOW()
+        WHERE id = $5 AND updated_at = $6
         RETURNING updated_at`
 
 	args := []any{
 		user.Name,
 		user.Email,
 		user.Password.hash,
+		user.Activated,
 		user.ID,
 		user.UpdatedAt,
 	}
