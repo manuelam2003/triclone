@@ -160,22 +160,22 @@ Here's a checklist to guide you through the process of creating a Tricount clone
 
 ### 1. **Planning & Design**
 
-- [ ] **Define Core Features**: List the essential features (e.g., user management, group creation, expense tracking, settlements).
-- [ ] **Design Database Schema**: Create a detailed database schema (tables, relationships, and keys).
-- [ ] **Design API Endpoints**: Outline all required RESTful API endpoints.
+- [x] **Define Core Features**: List the essential features (e.g., user management, group creation, expense tracking, settlements).
+- [x] **Design Database Schema**: Create a detailed database schema (tables, relationships, and keys).
+- [x] **Design API Endpoints**: Outline all required RESTful API endpoints.
 
 ### 2. **Project Setup**
 
-- [ ] **Set Up Version Control**: Initialize a Git repository for your project.
-- [ ] **Choose Tech Stack**: Decide on the backend (e.g., Node.js, Python, Ruby) and frontend (e.g., React, Angular) technologies.
-- [ ] **Initialize Backend Project**: Set up the backend framework (e.g., Express, Django, Rails).
-- [ ] **Initialize Frontend Project**: Set up the frontend framework (if applicable).
+- [x] **Set Up Version Control**: Initialize a Git repository for your project.
+- [x] **Choose Tech Stack**: Decide on the backend (e.g., Node.js, Python, Ruby) and frontend (e.g., React, Angular) technologies.
+- [x] **Initialize Backend Project**: Set up the backend framework (e.g., Express, Django, Rails).
+- [x] **Initialize Frontend Project**: Set up the frontend framework (if applicable).
 
 ### 3. **Database Setup**
 
-- [ ] **Choose a Database**: Decide on the type of database (e.g., PostgreSQL, MySQL, MongoDB).
-- [ ] **Create Database and Tables**: Implement the database schema.
-- [ ] **Set Up Database Migrations**: Use a migration tool to manage schema changes.
+- [x] **Choose a Database**: Decide on the type of database (e.g., PostgreSQL, MySQL, MongoDB).
+- [x] **Create Database and Tables**: Implement the database schema.
+- [x] **Set Up Database Migrations**: Use a migration tool to manage schema changes.
 
 ### 4. **User Authentication**
 
@@ -185,16 +185,16 @@ Here's a checklist to guide you through the process of creating a Tricount clone
 
 ### 5. **Group Management**
 
-- [ ] **Create Group**: Implement the `/groups` POST endpoint.
-- [ ] **Retrieve Groups**: Implement the `/groups` GET endpoint to list all groups for a user.
-- [ ] **Update Group**: Implement the `/groups/{group_id}` PUT endpoint.
-- [ ] **Delete Group**: Implement the `/groups/{group_id}` DELETE endpoint.
+- [x] **Create Group**: Implement the `/groups` POST endpoint.
+- [x] **Retrieve Groups**: Implement the `/groups` GET endpoint to list all groups for a user.
+- [x] **Update Group**: Implement the `/groups/{group_id}` PUT endpoint.
+- [x] **Delete Group**: Implement the `/groups/{group_id}` DELETE endpoint.
 
 ### 6. **Group Membership**
 
-- [ ] **Add Members to Group**: Implement the `/groups/{group_id}/members` POST endpoint.
-- [ ] **List Group Members**: Implement the `/groups/{group_id}/members` GET endpoint.
-- [ ] **Remove Member from Group**: Implement the `/groups/{group_id}/members/{user_id}` DELETE endpoint.
+- [x] **Add Members to Group**: Implement the `/groups/{group_id}/members` POST endpoint.
+- [x] **List Group Members**: Implement the `/groups/{group_id}/members` GET endpoint.
+- [x] **Remove Member from Group**: Implement the `/groups/{group_id}/members/{user_id}` DELETE endpoint.
 
 ### 7. **Expense Management**
 
