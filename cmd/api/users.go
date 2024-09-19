@@ -298,12 +298,15 @@ func (app *application) listGroupMembersHandler(w http.ResponseWriter, r *http.R
 	}
 
 	var input struct {
+		IsActive string
 		data.Filters
 	}
 
 	v := validator.New()
 
 	qs := r.URL.Query()
+
+	input.IsActive = app.readString(qs, "is_active", "true")
 
 	input.Filters.Page = app.readInt(qs, "page", 1, v)
 	input.Filters.PageSize = app.readInt(qs, "page_size", 20, v)
@@ -315,7 +318,7 @@ func (app *application) listGroupMembersHandler(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	users, metadata, err := app.models.Users.GetAllByGroup(groupID, input.Filters)
+	users, metadata, err := app.models.Users.GetAllByGroup(groupID, input.IsActive, input.Filters)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return

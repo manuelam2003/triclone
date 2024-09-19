@@ -336,14 +336,21 @@ func (m UserModel) GetAll(filters Filters) ([]*User, Metadata, error) {
 	return users, metadata, nil
 }
 
-func (m UserModel) GetAllByGroup(groupID int64, filters Filters) ([]*User, Metadata, error) {
-	query := fmt.Sprintf(`
-	SELECT count(*) OVER(), u.id, u.name, u.email, u.activated, u.created_at, u.updated_at
-	FROM users u
-	JOIN group_members gm ON u.id = gm.user_id
-	WHERE gm.group_id = $1 AND gm.is_active = true
-	ORDER BY %s %s, id ASC
-	LIMIT $2 OFFSET $3`, filters.sortColumn(), filters.sortDirection())
+func (m UserModel) GetAllByGroup(groupID int64, isActive string, filters Filters) ([]*User, Metadata, error) {
+	query := `
+		SELECT count(*) OVER(), u.id, u.name, u.email, u.activated, u.created_at, u.updated_at
+		FROM users u
+		JOIN group_members gm ON u.id = gm.user_id
+		WHERE gm.group_id = $1`
+
+	if isActive == "true" {
+		query += ` AND gm.is_active = true`
+	} else if isActive == "false" {
+		query += ` AND gm.is_active = false`
+	}
+
+	query = fmt.Sprintf(`%s ORDER BY %s %s, id ASC LIMIT $2 OFFSET $3`,
+		query, filters.sortColumn(), filters.sortDirection())
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
