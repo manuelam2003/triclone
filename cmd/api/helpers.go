@@ -124,3 +124,16 @@ func (app *application) readInt(qs url.Values, key string, defaultValue int, v *
 
 	return i
 }
+
+func (app *application) checkUserMembership(w http.ResponseWriter, r *http.Request, userID, groupID int64) (bool, error) {
+	isMember, err := app.models.GroupMembers.UserBelongsToGroup(userID, groupID)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return false, err
+	}
+	if !isMember {
+		app.forbiddenResponse(w, r)
+		return false, nil
+	}
+	return true, nil
+}
