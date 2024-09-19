@@ -39,6 +39,11 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPut, "/v1/groups/:group_id/expenses/:expense_id", app.requireActivatedUser(app.updateGroupExpenseHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id/expenses/:expense_id", app.requireActivatedUser(app.deleteGroupExpenseHandler))
 
+	router.HandlerFunc(http.MethodGet, "/v1/groups/:group_id/expenses/:expense_id/participants", app.requireActivatedUser(app.listExpenseParticipantsHandler))
+	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/expenses/:expense_id/participants", app.requireActivatedUser(app.addExpenseParticipantHandler))
+	router.HandlerFunc(http.MethodPut, "/v1/groups/:group_id/expenses/:expense_id/participants/:participant_id", app.requireActivatedUser(app.updateExpenseParticipantHandler))
+	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id/expenses/:expense_id/participants/:participant_id", app.requireActivatedUser(app.deleteExpenseParticipantHandler))
+
 	router.HandlerFunc(http.MethodPost, "/v1/tokens/authentication", app.createAuthenticationTokenHandler)
 
 	return app.recoverPanic(app.rateLimit(app.authenticate(router)))

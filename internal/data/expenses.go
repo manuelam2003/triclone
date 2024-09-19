@@ -184,3 +184,19 @@ func (m ExpenseModel) Delete(groupID, expenseID int64) error {
 
 	return nil
 }
+
+func (m ExpenseModel) CheckExpenseBelongsToGroup(expenseID, groupID int64) (bool, error) {
+	query := "SELECT EXISTS(SELECT 1 FROM expenses WHERE id = $1 AND group_id = $2)"
+
+	var exists bool
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := m.DB.QueryRowContext(ctx, query, expenseID, groupID).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}

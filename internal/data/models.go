@@ -13,19 +13,21 @@ var (
 )
 
 type Models struct {
-	Groups       GroupModel
-	Users        UserModel
-	Tokens       TokenModel
-	GroupMembers GroupMemberModel
-	Expenses     ExpenseModel
+	Groups               GroupModel
+	Users                UserModel
+	Tokens               TokenModel
+	GroupMembers         GroupMemberModel
+	Expenses             ExpenseModel
+	ExpensesParticipants ExpenseParticipantModel
 }
 
 func NewModels(db *sql.DB) Models {
 	return Models{
-		Groups:       GroupModel{DB: db},
-		Users:        UserModel{DB: db},
-		Tokens:       TokenModel{DB: db},
-		GroupMembers: GroupMemberModel{DB: db},
-		Expenses:     ExpenseModel{DB: db},
+		Groups:               GroupModel{DB: db},
+		Users:                UserModel{DB: db},
+		Tokens:               TokenModel{DB: db},
+		GroupMembers:         GroupMemberModel{DB: db},
+		Expenses:             ExpenseModel{DB: db},
+		ExpensesParticipants: ExpenseParticipantModel{DB: db},
 	}
 }
