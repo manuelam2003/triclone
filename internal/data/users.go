@@ -116,7 +116,7 @@ func (m UserModel) Insert(user *User) error {
 	return nil
 }
 
-func (u UserModel) GetByID(id int64) (*User, error) {
+func (m UserModel) GetByID(id int64) (*User, error) {
 	query := `
         SELECT id, name, email, password_hash, activated, created_at, updated_at
         FROM users
@@ -127,7 +127,7 @@ func (u UserModel) GetByID(id int64) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	err := u.DB.QueryRowContext(ctx, query, id).Scan(
+	err := m.DB.QueryRowContext(ctx, query, id).Scan(
 		&user.ID,
 		&user.Name,
 		&user.Email,
@@ -256,7 +256,7 @@ func (m UserModel) GetForToken(tokenScope, tokenPlaintext string) (*User, error)
 	return &user, nil
 }
 
-func (u UserModel) Delete(id int64) error {
+func (m UserModel) Delete(id int64) error {
 	if id < 1 {
 		return ErrRecordNotFound
 	}
@@ -268,7 +268,7 @@ func (u UserModel) Delete(id int64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	result, err := u.DB.ExecContext(ctx, query, id)
+	result, err := m.DB.ExecContext(ctx, query, id)
 	if err != nil {
 		return err
 	}
@@ -285,7 +285,7 @@ func (u UserModel) Delete(id int64) error {
 	return nil
 }
 
-func (u UserModel) GetAll(filters Filters) ([]*User, Metadata, error) {
+func (m UserModel) GetAll(filters Filters) ([]*User, Metadata, error) {
 	query := fmt.Sprintf(`
 	SELECT count(*) OVER(), id, name, email, activated, created_at, updated_at
 	FROM users
@@ -297,7 +297,7 @@ func (u UserModel) GetAll(filters Filters) ([]*User, Metadata, error) {
 
 	args := []any{filters.limit(), filters.offset()}
 
-	rows, err := u.DB.QueryContext(ctx, query, args...)
+	rows, err := m.DB.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, Metadata{}, err
 	}
