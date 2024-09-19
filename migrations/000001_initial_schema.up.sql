@@ -24,7 +24,8 @@ CREATE TABLE group_members (
     group_id INT REFERENCES groups(id) ON DELETE CASCADE,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,  
+    left_at TIMESTAMP,  
     UNIQUE (group_id, user_id)
 );
 

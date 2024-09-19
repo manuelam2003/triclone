@@ -54,7 +54,7 @@ db/migrations/up: confirm
 db/reset:
 	@docker compose down --volumes
 	@docker compose up -d
-	@sleep 3
+	@sleep 5
 	@migrate -path ./migrations -database ${TRICLONE_DB_DSN} up
 
 # ==================================================================================== #

@@ -21,6 +21,8 @@ Creating a Tricount clone, which is an app for managing group expenses, involves
 - **group_id** (Foreign Key -> Groups): The group to which the user belongs.
 - **user_id** (Foreign Key -> Users): The user who is a member of the group.
 - **joined_at**: Timestamp when the user joined the group.
+- **is_active**: Indicates if the user is still part of the group.
+- **left_at**: Timestamp when the user left the group.
 
 ### 4. **Expenses Table**
 

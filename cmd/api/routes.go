@@ -28,6 +28,10 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPatch, "/v1/groups/:group_id", app.updateGroupHandler)
 	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id", app.deleteGroupHandler)
 
+	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/members", app.addGroupMemberHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/members", app.listGroupMembersHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/members/:user_id", app.removeGroupMemberHandler)
+
 	router.HandlerFunc(http.MethodPost, "/v1/tokens/authentication", app.createAuthenticationTokenHandler)
 
 	return app.recoverPanic(app.rateLimit(app.authenticate(router)))
