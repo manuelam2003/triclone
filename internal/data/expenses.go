@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -42,6 +43,41 @@ func (m ExpenseModel) Insert(expense *Expense) error {
 	defer cancel()
 
 	return m.DB.QueryRowContext(ctx, query, args...).Scan(&expense.ID, &expense.CreatedAt, &expense.UpdatedAt)
+}
+
+func (m ExpenseModel) Get(groupID, expenseID int64) (*Expense, error) {
+	if expenseID < 1 {
+		return nil, ErrRecordNotFound
+	}
+
+	query := `
+		SELECT id, group_id, amount, description, paid_by, created_at, updated_at
+		FROM expenses
+		WHERE id = $1 AND group_id = $2`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var expense Expense
+
+	err := m.DB.QueryRowContext(ctx, query, expenseID, groupID).Scan(
+		&expense.ID,
+		&expense.GroupID,
+		&expense.Amount,
+		&expense.Description,
+		&expense.PaidBy,
+		&expense.CreatedAt,
+		&expense.UpdatedAt,
+	)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrRecordNotFound
+		}
+		return nil, err
+	}
+
+	return &expense, nil
 }
 
 func (m ExpenseModel) GetAll(groupID int64, description string, paidBy int64, filters Filters) ([]*Expense, Metadata, error) {
