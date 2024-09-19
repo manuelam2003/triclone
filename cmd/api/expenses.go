@@ -151,11 +151,116 @@ func (app *application) createGroupExpenseHandler(w http.ResponseWriter, r *http
 }
 
 func (app *application) updateGroupExpenseHandler(w http.ResponseWriter, r *http.Request) {
+	groupID, err := app.readIDParam(r, "group_id")
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	expenseID, err := app.readIDParam(r, "expense_id")
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	currentUser := app.contextGetUser(r)
+
+	isMember, err := app.checkUserMembership(w, r, currentUser.ID, groupID)
+	if err != nil || !isMember {
+		return
+	}
+
+	expense, err := app.models.Expenses.Get(groupID, expenseID)
+	if err != nil {
+
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	var input struct {
+		Amount      *float64 `json:"amount"`
+		Description *string  `json:"description"`
+	}
+
+	err = app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	if input.Amount != nil {
+		expense.Amount = *input.Amount
+	}
+
+	if input.Description != nil {
+		expense.Description = *input.Description
+	}
+
+	v := validator.New()
+
+	if data.ValidateExpense(v, expense); !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
+
+	err = app.models.Expenses.Update(expense)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrEditConflict):
+			app.editConflictResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"expense": expense}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 
 }
 
 func (app *application) deleteGroupExpenseHandler(w http.ResponseWriter, r *http.Request) {
+	groupID, err := app.readIDParam(r, "group_id")
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
 
+	expenseID, err := app.readIDParam(r, "expense_id")
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	currentUser := app.contextGetUser(r)
+
+	isMember, err := app.checkUserMembership(w, r, currentUser.ID, groupID)
+	if err != nil || !isMember {
+		return
+	}
+
+	err = app.models.Expenses.Delete(groupID, expenseID)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"message": "expense successfully deleted"}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }
 
 func (app *application) checkUserMembership(w http.ResponseWriter, r *http.Request, userID, groupID int64) (bool, error) {

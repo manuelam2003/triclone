@@ -46,10 +46,6 @@ func (m ExpenseModel) Insert(expense *Expense) error {
 }
 
 func (m ExpenseModel) Get(groupID, expenseID int64) (*Expense, error) {
-	if expenseID < 1 {
-		return nil, ErrRecordNotFound
-	}
-
 	query := `
 		SELECT id, group_id, amount, description, paid_by, created_at, updated_at
 		FROM expenses
@@ -133,4 +129,58 @@ func (m ExpenseModel) GetAll(groupID int64, description string, paidBy int64, fi
 	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
 
 	return expenses, metadata, nil
+}
+
+func (m ExpenseModel) Update(expense *Expense) error {
+	query := `
+		UPDATE expenses
+		SET amount = $1, description = $2, updated_at = NOW()
+		WHERE id = $3 AND updated_at = $4
+		RETURNING updated_at`
+
+	args := []any{expense.Amount, expense.Description, expense.ID, expense.UpdatedAt}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&expense.UpdatedAt)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return ErrEditConflict
+		default:
+			return err
+		}
+	}
+
+	return nil
+
+}
+
+func (m ExpenseModel) Delete(groupID, expenseID int64) error {
+	query := `
+		DELETE FROM expenses 
+		WHERE id = $1 AND group_id = $2`
+
+	args := []any{expenseID, groupID}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	result, err := m.DB.ExecContext(ctx, query, args...)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrRecordNotFound
+	}
+
+	return nil
 }
