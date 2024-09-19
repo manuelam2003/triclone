@@ -22,15 +22,15 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPatch, "/v1/users/:user_id", app.requireActivatedUser(app.updateUserHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/users/:user_id", app.requireActivatedUser(app.deleteUserHandler))
 
-	router.HandlerFunc(http.MethodGet, "/v1/groups", app.requireActivatedUser(app.listGroupsHandler))
-	router.HandlerFunc(http.MethodPost, "/v1/groups", app.requireActivatedUser(app.createGroupHandler))
+	router.HandlerFunc(http.MethodGet, "/v1/groups", app.listGroupsHandler)
 	router.HandlerFunc(http.MethodGet, "/v1/groups/:group_id", app.showGroupHandler)
-	router.HandlerFunc(http.MethodPatch, "/v1/groups/:group_id", app.updateGroupHandler)
-	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id", app.deleteGroupHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/groups", app.requireActivatedUser(app.createGroupHandler))
+	router.HandlerFunc(http.MethodPatch, "/v1/groups/:group_id", app.requireActivatedUser(app.updateGroupHandler))
+	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id", app.requireActivatedUser(app.deleteGroupHandler))
 
-	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/members", app.addGroupMemberHandler)
-	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/members", app.listGroupMembersHandler)
-	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/members/:user_id", app.removeGroupMemberHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/members", app.requireActivatedUser(app.addGroupMemberHandler))
+	router.HandlerFunc(http.MethodGet, "/v1/groups/:group_id/members", app.listGroupMembersHandler)
+	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id/members/:user_id", app.removeGroupMemberHandler)
 
 	router.HandlerFunc(http.MethodPost, "/v1/tokens/authentication", app.createAuthenticationTokenHandler)
 
