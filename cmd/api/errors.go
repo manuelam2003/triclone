@@ -80,3 +80,8 @@ func (app *application) inactiveAccountResponse(w http.ResponseWriter, r *http.R
 	message := "your user account must be activated to access this resource"
 	app.errorResponse(w, r, http.StatusForbidden, message)
 }
+
+func (app *application) invalidUserResponse(w http.ResponseWriter, r *http.Request) {
+	message := "you must be the user who created the resource to modify it"
+	app.errorResponse(w, r, http.StatusUnauthorized, message)
+}
