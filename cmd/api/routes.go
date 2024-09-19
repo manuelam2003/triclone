@@ -28,9 +28,15 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPatch, "/v1/groups/:group_id", app.requireActivatedUser(app.updateGroupHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id", app.requireActivatedUser(app.deleteGroupHandler))
 
-	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/members", app.requireActivatedUser(app.addGroupMemberHandler))
 	router.HandlerFunc(http.MethodGet, "/v1/groups/:group_id/members", app.listGroupMembersHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/members", app.requireActivatedUser(app.addGroupMemberHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id/members/:user_id", app.removeGroupMemberHandler)
+
+	router.HandlerFunc(http.MethodGet, "/v1/groups/:group_id/expenses", app.listGroupExpensesHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/groups/:group_id/expenses/:expense_id", app.showGroupExpenseHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/expenses", app.createGroupExpenseHandler)
+	router.HandlerFunc(http.MethodPut, "/v1/groups/:group_id/expenses/:expense_id", app.updateGroupExpenseHandler)
+	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id/expenses/:expense_id", app.deleteGroupExpenseHandler)
 
 	router.HandlerFunc(http.MethodPost, "/v1/tokens/authentication", app.createAuthenticationTokenHandler)
 

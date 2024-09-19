@@ -60,7 +60,8 @@ func (app *application) removeGroupMemberHandler(w http.ResponseWriter, r *http.
 
 	currentUser := app.contextGetUser(r)
 
-	if currentUser.ID != userID && currentUser.ID != group.CreatedBy {
+	// ! cuidao si es nil el pointer
+	if currentUser.ID != userID && currentUser.ID != *group.CreatedBy {
 		app.invalidUserResponse(w, r)
 		return
 	}

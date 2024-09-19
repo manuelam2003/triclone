@@ -9,12 +9,12 @@ import (
 )
 
 type GroupMember struct {
-	ID       int64     `json:"id"`
-	GroupID  int64     `json:"group_id"`
-	UserID   int64     `json:"user_id"`
-	JoinedAt time.Time `json:"joined_at"`
-	IsActive bool      `json:"is_active"`
-	LeftAt   time.Time `json:"left_at"`
+	ID       int64      `json:"id"`
+	GroupID  int64      `json:"group_id"`
+	UserID   int64      `json:"user_id"`
+	JoinedAt time.Time  `json:"joined_at"`
+	IsActive bool       `json:"is_active"`
+	LeftAt   *time.Time `json:"left_at"`
 }
 
 func ValidateGroupMember(v *validator.Validator, groupMember *GroupMember) {

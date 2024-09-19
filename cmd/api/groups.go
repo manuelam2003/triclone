@@ -59,9 +59,10 @@ func (app *application) createGroupHandler(w http.ResponseWriter, r *http.Reques
 
 	currentUser := app.contextGetUser(r)
 
+	// ! cuidao si es nil el pointer
 	group := &data.Group{
 		Name:      input.Name,
-		CreatedBy: currentUser.ID,
+		CreatedBy: &currentUser.ID,
 	}
 
 	v := validator.New()
@@ -130,7 +131,8 @@ func (app *application) updateGroupHandler(w http.ResponseWriter, r *http.Reques
 
 	currentUser := app.contextGetUser(r)
 
-	if currentUser.ID != group.CreatedBy {
+	// ! cuidao si es nil el pointer
+	if currentUser.ID != *group.CreatedBy {
 		app.invalidUserResponse(w, r)
 		return
 	}
@@ -183,7 +185,8 @@ func (app *application) deleteGroupHandler(w http.ResponseWriter, r *http.Reques
 
 	currentUser := app.contextGetUser(r)
 
-	if currentUser.ID != group.CreatedBy {
+	// ! cuidao si es nil el pointer
+	if currentUser.ID != *group.CreatedBy {
 		app.invalidUserResponse(w, r)
 		return
 	}
