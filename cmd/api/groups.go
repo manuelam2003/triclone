@@ -48,8 +48,7 @@ func (app *application) listGroupsHandler(w http.ResponseWriter, r *http.Request
 
 func (app *application) createGroupHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		Name      string `json:"name"`
-		CreatedBy int64  `json:"created_by"`
+		Name string `json:"name"`
 	}
 
 	err := app.readJSON(w, r, &input)
@@ -58,9 +57,11 @@ func (app *application) createGroupHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	currentUser := app.contextGetUser(r)
+
 	group := &data.Group{
 		Name:      input.Name,
-		CreatedBy: input.CreatedBy,
+		CreatedBy: currentUser.ID,
 	}
 
 	v := validator.New()
@@ -127,24 +128,21 @@ func (app *application) updateGroupHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	// ! should i allow changing createdBy?
+	currentUser := app.contextGetUser(r)
+
+	if currentUser.ID != group.CreatedBy {
+		app.invalidUserResponse(w, r)
+		return
+	}
+
 	var input struct {
-		Name      *string `json:"name"`
-		CreatedBy *int64  `json:"created_by"`
+		Name string `json:"name"`
 	}
 
 	err = app.readJSON(w, r, &input)
 	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
-	}
-
-	if input.Name != nil {
-		group.Name = *input.Name
-	}
-
-	if input.CreatedBy != nil {
-		group.CreatedBy = *input.CreatedBy
 	}
 
 	err = app.models.Groups.Update(group)
@@ -169,6 +167,24 @@ func (app *application) deleteGroupHandler(w http.ResponseWriter, r *http.Reques
 	id, err := app.readIDParam(r, "group_id")
 	if err != nil {
 		app.notFoundResponse(w, r)
+		return
+	}
+
+	group, err := app.models.Groups.Get(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	currentUser := app.contextGetUser(r)
+
+	if currentUser.ID != group.CreatedBy {
+		app.invalidUserResponse(w, r)
 		return
 	}
 
