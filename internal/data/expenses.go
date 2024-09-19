@@ -1,24 +1,44 @@
 package data
 
-import "time"
+import (
+	"context"
+	"database/sql"
+	"time"
+
+	"github.com/manuelam2003/triclone/internal/validator"
+)
 
 type Expense struct {
-	ID          int64     `json:"id"`          // SERIAL (int in Go)
-	GroupID     int64     `json:"group_id"`    // INT (references groups(id))
-	Amount      float64   `json:"amount"`      // NUMERIC(10, 2) (float64 in Go)
-	Description string    `json:"description"` // VARCHAR(255) (string in Go)
-	PaidBy      *int64    `json:"paid_by"`     // INT (references users(id)) - can be NULL, so use a pointer
-	CreatedAt   time.Time `json:"created_at"`  // TIMESTAMP (time.Time in Go)
-	UpdatedAt   time.Time `json:"updated_at"`  // TIMESTAMP (time.Time in Go)
+	ID          int64     `json:"id"`
+	GroupID     int64     `json:"group_id"`
+	Amount      float64   `json:"amount"`
+	Description string    `json:"description"`
+	PaidBy      *int64    `json:"paid_by"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
-// -- 4. Expenses Table
-// CREATE TABLE expenses (
-//     id SERIAL PRIMARY KEY,
-//     group_id INT REFERENCES groups(id) ON DELETE CASCADE,
-//     amount NUMERIC(10, 2) NOT NULL,
-//     description VARCHAR(255),
-//     paid_by INT REFERENCES users(id) ON DELETE SET NULL,
-//     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-// );
+type ExpenseModel struct {
+	DB *sql.DB
+}
+
+func ValidateExpense(v *validator.Validator, expense *Expense) {
+	v.Check(expense.GroupID > 0, "group_id", "must be non negative")
+	v.Check(expense.Amount > 0.0, "amount", "must be non negative")
+	v.Check(expense.Description != "", "description", "must be provided")
+	v.Check(len(expense.Description) <= 500, "description", "must not be more than 500 bytes long")
+}
+
+func (m ExpenseModel) Insert(expense *Expense) error {
+	query := `
+		INSERT INTO expenses(group_id, amount, description, paid_by)
+		VALUES ($1, $2, $3, $4)
+		RETURNING id, created_at, updated_at`
+
+	args := []any{expense.GroupID, expense.Amount, expense.Description, *expense.PaidBy}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	return m.DB.QueryRowContext(ctx, query, args...).Scan(&expense.ID, &expense.CreatedAt, &expense.UpdatedAt)
+}

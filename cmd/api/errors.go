@@ -85,3 +85,8 @@ func (app *application) invalidUserResponse(w http.ResponseWriter, r *http.Reque
 	message := "you must be the user who created the resource to modify it"
 	app.errorResponse(w, r, http.StatusUnauthorized, message)
 }
+
+func (app *application) forbiddenResponse(w http.ResponseWriter, r *http.Request) {
+	message := "you do not have permission to perform this action"
+	app.errorResponse(w, r, http.StatusForbidden, message)
+}

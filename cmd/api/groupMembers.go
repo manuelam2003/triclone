@@ -32,6 +32,11 @@ func (app *application) addGroupMemberHandler(w http.ResponseWriter, r *http.Req
 			app.serverErrorResponse(w, r, err)
 		}
 	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"message": "user successfully added to group"}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }
 
 func (app *application) removeGroupMemberHandler(w http.ResponseWriter, r *http.Request) {
