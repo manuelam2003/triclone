@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/manuelam2003/triclone/internal/validator"
@@ -41,4 +42,59 @@ func (m ExpenseModel) Insert(expense *Expense) error {
 	defer cancel()
 
 	return m.DB.QueryRowContext(ctx, query, args...).Scan(&expense.ID, &expense.CreatedAt, &expense.UpdatedAt)
+}
+
+func (m ExpenseModel) GetAll(groupID int64, description string, paidBy int64, filters Filters) ([]*Expense, Metadata, error) {
+	query := fmt.Sprintf(`
+	SELECT count(*) OVER(), id, group_id, amount, description, paid_by, created_at, updated_at
+	FROM expenses
+	WHERE group_id = $1
+	AND (to_tsvector('simple', description) @@ plainto_tsquery('simple', $2) OR $2 = '')
+	AND (paid_by = $3 OR $3 = 0)
+	ORDER BY %s %s, id ASC
+	LIMIT $4 OFFSET $5`, filters.sortColumn(), filters.sortDirection())
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	args := []any{groupID, description, paidBy, filters.limit(), filters.offset()}
+
+	rows, err := m.DB.QueryContext(ctx, query, args...)
+	if err != nil {
+		return nil, Metadata{}, err
+	}
+
+	defer rows.Close()
+
+	totalRecords := 0
+	expenses := []*Expense{}
+
+	for rows.Next() {
+		var expense Expense
+
+		err := rows.Scan(
+			&totalRecords,
+			&expense.ID,
+			&expense.GroupID,
+			&expense.Amount,
+			&expense.Description,
+			&expense.PaidBy,
+			&expense.CreatedAt,
+			&expense.UpdatedAt,
+		)
+
+		if err != nil {
+			return nil, Metadata{}, err
+		}
+
+		expenses = append(expenses, &expense)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, Metadata{}, err
+	}
+
+	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
+
+	return expenses, metadata, nil
 }
