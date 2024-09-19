@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/manuelam2003/triclone/internal/data"
@@ -27,7 +28,6 @@ func (app *application) listExpenseParticipantsHandler(w http.ResponseWriter, r 
 		return
 	}
 
-	// Check if the expense belongs to the specified group
 	belongsToGroup, err := app.models.Expenses.CheckExpenseBelongsToGroup(expenseID, groupID)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -62,8 +62,80 @@ func (app *application) listExpenseParticipantsHandler(w http.ResponseWriter, r 
 	}
 }
 
-func (app *application) addExpenseParticipantHandler(w http.ResponseWriter, r *http.Request) {
+func (app *application) addExpenseParticipantsHandler(w http.ResponseWriter, r *http.Request) {
+	groupID, err := app.readIDParam(r, "group_id")
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
 
+	expenseID, err := app.readIDParam(r, "expense_id")
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	currentUser := app.contextGetUser(r)
+
+	isMember, err := app.checkUserMembership(w, r, currentUser.ID, groupID)
+	if err != nil || !isMember {
+		return
+	}
+
+	belongsToGroup, err := app.models.Expenses.CheckExpenseBelongsToGroup(expenseID, groupID)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+	if !belongsToGroup {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	var participants []struct {
+		UserID     int64   `json:"user_id"`
+		AmountOwed float64 `json:"amount_owed"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&participants); err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	newRecords := 0
+
+	v := validator.New()
+
+	for _, participant := range participants {
+
+		isMember, err := app.checkUserMembership(w, r, participant.UserID, groupID)
+		if err != nil || !isMember {
+			continue
+		}
+
+		newParticipant := &data.ExpenseParticipant{
+			ExpenseID:  expenseID,
+			UserID:     participant.UserID,
+			AmountOwed: participant.AmountOwed,
+		}
+
+		if data.ValidateParticipant(v, newParticipant); !v.Valid() {
+			app.failedValidationResponse(w, r, v.Errors)
+			return
+		}
+
+		err = app.models.ExpensesParticipants.Insert(newParticipant)
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+			return
+		}
+		newRecords++
+	}
+
+	err = app.writeJSON(w, http.StatusCreated, envelope{"message": "expense participants added succesfully", "newRecords": newRecords}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }
 
 func (app *application) updateExpenseParticipantHandler(w http.ResponseWriter, r *http.Request) {

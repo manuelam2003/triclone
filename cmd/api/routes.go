@@ -40,7 +40,7 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id/expenses/:expense_id", app.requireActivatedUser(app.deleteGroupExpenseHandler))
 
 	router.HandlerFunc(http.MethodGet, "/v1/groups/:group_id/expenses/:expense_id/participants", app.requireActivatedUser(app.listExpenseParticipantsHandler))
-	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/expenses/:expense_id/participants", app.requireActivatedUser(app.addExpenseParticipantHandler))
+	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/expenses/:expense_id/participants", app.requireActivatedUser(app.addExpenseParticipantsHandler))
 	router.HandlerFunc(http.MethodPut, "/v1/groups/:group_id/expenses/:expense_id/participants/:participant_id", app.requireActivatedUser(app.updateExpenseParticipantHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id/expenses/:expense_id/participants/:participant_id", app.requireActivatedUser(app.deleteExpenseParticipantHandler))
 

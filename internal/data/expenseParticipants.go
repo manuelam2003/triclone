@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"time"
+
+	"github.com/manuelam2003/triclone/internal/validator"
 )
 
 type ExpenseParticipant struct {
@@ -17,6 +19,12 @@ type ExpenseParticipant struct {
 
 type ExpenseParticipantModel struct {
 	DB *sql.DB
+}
+
+func ValidateParticipant(v *validator.Validator, participant *ExpenseParticipant) {
+	v.Check(participant.ExpenseID > 0, "expense_id", "must be non negative")
+	v.Check(participant.UserID > 0, "user_id", "must be non negative")
+	v.Check(participant.AmountOwed > 0, "amount_owed", "must be non negative")
 }
 
 func (m ExpenseParticipantModel) GetAllForGroupAndExpense(groupID, expenseID int64, filters Filters) ([]*ExpenseParticipant, Metadata, error) {
@@ -62,4 +70,17 @@ func (m ExpenseParticipantModel) GetAllForGroupAndExpense(groupID, expenseID int
 	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
 
 	return participants, metadata, nil
+}
+
+func (m ExpenseParticipantModel) Insert(participant *ExpenseParticipant) error {
+	query := `
+		INSERT INTO expense_participants(expense_id, user_id, amount_owed)
+		VALUES ($1, $2, $3)
+		RETURNING id, updated_at`
+
+	args := []any{participant.ExpenseID, participant.UserID, participant.AmountOwed}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	return m.DB.QueryRowContext(ctx, query, args...).Scan(&participant.ID, &participant.UpdatedAt)
 }
