@@ -48,3 +48,28 @@ func (m GroupMemberModel) Insert(groupID, userID int64) error {
 	}
 	return nil
 }
+
+func (m GroupMemberModel) SoftDelete(groupID, userID int64) error {
+	query := `
+		UPDATE group_members
+		SET is_active = FALSE, left_at = $1
+		WHERE group_id = $2 AND user_id = $3 AND is_active = TRUE`
+
+	leftAt := time.Now()
+
+	result, err := m.DB.Exec(query, leftAt, groupID, userID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrRecordNotFound
+	}
+
+	return nil
+}

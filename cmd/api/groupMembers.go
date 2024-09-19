@@ -35,9 +35,49 @@ func (app *application) addGroupMemberHandler(w http.ResponseWriter, r *http.Req
 }
 
 func (app *application) removeGroupMemberHandler(w http.ResponseWriter, r *http.Request) {
-	// groupID, err := app.readIDParam(r, "group_id")
-	// if err != nil {
-	// 	app.notFoundResponse(w, r)
-	// 	return
-	// }
+	groupID, err := app.readIDParam(r, "group_id")
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	group, err := app.models.Groups.Get(groupID)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	userID, err := app.readIDParam(r, "user_id")
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	currentUser := app.contextGetUser(r)
+
+	if currentUser.ID != userID && currentUser.ID != group.CreatedBy {
+		app.invalidUserResponse(w, r)
+		return
+	}
+
+	err = app.models.GroupMembers.SoftDelete(groupID, userID)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"message": "user successfully removed from group"}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }
