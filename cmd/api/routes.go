@@ -18,8 +18,8 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPost, "/v1/users", app.createUserHandler)
 	router.HandlerFunc(http.MethodPut, "/v1/users/activated", app.activateUserHandler)
 
-	router.HandlerFunc(http.MethodGet, "/v1/groups", app.listGroupsHandler)
-	router.HandlerFunc(http.MethodPost, "/v1/groups", app.createGroupHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/groups", app.requireActivatedUser(app.listGroupsHandler))
+	router.HandlerFunc(http.MethodPost, "/v1/groups", app.requireActivatedUser(app.createGroupHandler))
 	router.HandlerFunc(http.MethodGet, "/v1/groups/:group_id", app.showGroupHandler)
 	router.HandlerFunc(http.MethodPatch, "/v1/groups/:group_id", app.updateGroupHandler)
 	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id", app.deleteGroupHandler)
