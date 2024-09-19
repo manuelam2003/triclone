@@ -335,3 +335,56 @@ func (m UserModel) GetAll(filters Filters) ([]*User, Metadata, error) {
 
 	return users, metadata, nil
 }
+
+func (m UserModel) GetAllByGroup(groupID int64, filters Filters) ([]*User, Metadata, error) {
+	query := fmt.Sprintf(`
+	SELECT count(*) OVER(), u.id, u.name, u.email, u.activated, u.created_at, u.updated_at
+	FROM users u
+	JOIN group_members gm ON u.id = gm.user_id
+	WHERE gm.group_id = $1 AND gm.is_active = true
+	ORDER BY %s %s, id ASC
+	LIMIT $2 OFFSET $3`, filters.sortColumn(), filters.sortDirection())
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	args := []any{groupID, filters.limit(), filters.offset()}
+
+	rows, err := m.DB.QueryContext(ctx, query, args...)
+	if err != nil {
+		return nil, Metadata{}, err
+	}
+
+	defer rows.Close()
+
+	totalRecords := 0
+	users := []*User{}
+
+	for rows.Next() {
+		var user User
+
+		err := rows.Scan(
+			&totalRecords,
+			&user.ID,
+			&user.Name,
+			&user.Email,
+			&user.Activated,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		)
+
+		if err != nil {
+			return nil, Metadata{}, err
+		}
+
+		users = append(users, &user)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, Metadata{}, err
+	}
+
+	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
+
+	return users, metadata, nil
+}
