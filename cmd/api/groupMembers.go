@@ -82,3 +82,38 @@ func (app *application) removeGroupMemberHandler(w http.ResponseWriter, r *http.
 		app.serverErrorResponse(w, r, err)
 	}
 }
+
+func (app *application) reinstateGroupMemberHandler(w http.ResponseWriter, r *http.Request) {
+	groupID, err := app.readIDParam(r, "group_id")
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	userID, err := app.readIDParam(r, "user_id")
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	exists, err := app.models.GroupMembers.CheckIfUserWasInGroup(groupID, userID)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+	if !exists {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	err = app.models.GroupMembers.ReinstateMember(groupID, userID)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"message": "Member reinstated successfully"}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
+}

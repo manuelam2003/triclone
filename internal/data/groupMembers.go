@@ -73,3 +73,49 @@ func (m GroupMemberModel) SoftDelete(groupID, userID int64) error {
 
 	return nil
 }
+
+func (m GroupMemberModel) UserBelongsToGroup(userID, groupID int64) (bool, error) {
+	query := `
+		SELECT EXISTS(
+			SELECT 1 
+			FROM group_members 
+			WHERE user_id = $1 AND group_id = $2 AND is_active = true
+		)`
+
+	var exists bool
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := m.DB.QueryRowContext(ctx, query, userID, groupID).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}
+
+func (m GroupMemberModel) CheckIfUserWasInGroup(groupID, userID int64) (bool, error) {
+	query := `
+		SELECT COUNT(*) 
+		FROM group_members 
+		WHERE group_id = $1 AND user_id = $2 AND is_active = false`
+
+	var count int
+	err := m.DB.QueryRow(query, groupID, userID).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
+func (m GroupMemberModel) ReinstateMember(groupID, userID int64) error {
+	query := `
+		UPDATE group_members
+		SET is_active = true, left_at = NULL
+		WHERE group_id = $1 AND user_id = $2 AND is_active = false`
+
+	_, err := m.DB.Exec(query, groupID, userID)
+	return err
+}
