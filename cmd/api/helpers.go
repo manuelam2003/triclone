@@ -25,6 +25,18 @@ func (app *application) readIDParam(r *http.Request, name string) (int64, error)
 	return id, nil
 }
 
+func (app *application) extractIDsFromRequest(r *http.Request, ids ...string) (map[string]int64, error) {
+	result := make(map[string]int64)
+	for _, id := range ids {
+		value, err := app.readIDParam(r, id)
+		if err != nil {
+			return nil, err
+		}
+		result[id] = value
+	}
+	return result, nil
+}
+
 type envelope map[string]any
 
 func (app *application) writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
