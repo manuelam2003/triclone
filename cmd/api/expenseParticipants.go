@@ -113,7 +113,13 @@ func (app *application) addExpenseParticipantsHandler(w http.ResponseWriter, r *
 
 		err = app.models.ExpensesParticipants.Insert(newParticipant)
 		if err != nil {
-			app.serverErrorResponse(w, r, err)
+			switch {
+			case errors.Is(err, data.ErrDuplicateEntry):
+				v.AddError("unique", "a expense with this ID and user_id already exists")
+				app.failedValidationResponse(w, r, v.Errors)
+			default:
+				app.serverErrorResponse(w, r, err)
+			}
 			return
 		}
 		newRecords++

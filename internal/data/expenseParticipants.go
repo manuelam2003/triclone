@@ -83,7 +83,17 @@ func (m ExpenseParticipantModel) Insert(participant *ExpenseParticipant) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	return m.DB.QueryRowContext(ctx, query, args...).Scan(&participant.ID, &participant.UpdatedAt)
+	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&participant.ID, &participant.UpdatedAt)
+	if err != nil {
+		switch {
+		case err.Error() == `pq: duplicate key value violates unique constraint "expense_participants_expense_id_user_id_key"`:
+			return ErrDuplicateEntry
+		default:
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (m ExpenseParticipantModel) Get(participantID int64) (*ExpenseParticipant, error) {
