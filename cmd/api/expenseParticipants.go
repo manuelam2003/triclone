@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/manuelam2003/triclone/internal/data"
@@ -53,14 +54,13 @@ func (app *application) listExpenseParticipantsHandler(w http.ResponseWriter, r 
 	}
 }
 
+type Participant struct {
+	UserID     int64   `json:"user_id"`
+	AmountOwed float64 `json:"amount_owed"`
+}
+
 func (app *application) addExpenseParticipantsHandler(w http.ResponseWriter, r *http.Request) {
 	ids, err := app.extractIDsFromRequest(r, "group_id", "expense_id")
-	if err != nil {
-		app.notFoundResponse(w, r)
-		return
-	}
-
-	expenseID, err := app.readIDParam(r, "expense_id")
 	if err != nil {
 		app.notFoundResponse(w, r)
 		return
@@ -77,13 +77,16 @@ func (app *application) addExpenseParticipantsHandler(w http.ResponseWriter, r *
 		return
 	}
 
-	var participants []struct {
-		UserID     int64   `json:"user_id"`
-		AmountOwed float64 `json:"amount_owed"`
-	}
+	var participants []Participant
 
 	if err := json.NewDecoder(r.Body).Decode(&participants); err != nil {
 		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	err = app.validateExpenseParticipants(ids["group_id"], ids["expense_id"], participants)
+	if err != nil {
+		app.failedValidationResponse(w, r, map[string]string{"amount": err.Error()})
 		return
 	}
 
@@ -101,7 +104,7 @@ func (app *application) addExpenseParticipantsHandler(w http.ResponseWriter, r *
 		}
 
 		newParticipant := &data.ExpenseParticipant{
-			ExpenseID:  expenseID,
+			ExpenseID:  ids["expense_id"],
 			UserID:     participant.UserID,
 			AmountOwed: participant.AmountOwed,
 		}
@@ -251,7 +254,6 @@ func (app *application) deleteExpenseParticipantHandler(w http.ResponseWriter, r
 	}
 }
 
-// Helper function to check if an expense belongs to the group
 func (app *application) checkExpenseInGroup(w http.ResponseWriter, r *http.Request, expenseID, groupID int64) (bool, error) {
 	belongsToGroup, err := app.models.Expenses.CheckExpenseBelongsToGroup(expenseID, groupID)
 	if err != nil {
@@ -263,4 +265,22 @@ func (app *application) checkExpenseInGroup(w http.ResponseWriter, r *http.Reque
 		return false, nil
 	}
 	return true, nil
+}
+
+func (app *application) validateExpenseParticipants(groupID, expenseID int64, participants []Participant) error {
+	expense, err := app.models.Expenses.Get(groupID, expenseID)
+	if err != nil {
+		return err
+	}
+
+	totalOwed := 0.0
+	for _, participant := range participants {
+		totalOwed += participant.AmountOwed
+	}
+
+	if totalOwed > expense.Amount {
+		return fmt.Errorf("total participants' amount owed exceeds the expense amount")
+	}
+
+	return nil
 }
