@@ -112,6 +112,10 @@ This API is designed to manage group expenses, settlements, users, and membershi
 
 - **DELETE** `/v1/groups/:group_id/settlements/:settlement_id`: Delete a specific settlement.
 
+### Balances
+
+- **GET** `/v1/groups/:group_id/balance`: List all balances for a group. 
+
 ### Authentication
 
 - **POST** `/v1/tokens/authentication`: Authenticate a user and create an authentication token.

@@ -20,6 +20,7 @@ type Models struct {
 	Expenses             ExpenseModel
 	ExpensesParticipants ExpenseParticipantModel
 	Settlements          SettlementModel
+	Balances             BalanceModel
 }
 
 func NewModels(db *sql.DB) Models {
@@ -31,5 +32,6 @@ func NewModels(db *sql.DB) Models {
 		Expenses:             ExpenseModel{DB: db},
 		ExpensesParticipants: ExpenseParticipantModel{DB: db},
 		Settlements:          SettlementModel{DB: db},
+		Balances:             BalanceModel{DB: db},
 	}
 }

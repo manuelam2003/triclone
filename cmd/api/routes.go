@@ -49,9 +49,9 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPost, "/v1/groups/:group_id/settlements", app.requireActivatedUser(app.addSettlementHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/groups/:group_id/settlements/:settlement_id", app.requireActivatedUser(app.deleteSettlementHandler))
 
-	router.HandlerFunc(http.MethodPost, "/v1/tokens/authentication", app.createAuthenticationTokenHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/groups/:group_id/balance", app.requireActivatedUser(app.groupBalanceHandler))
 
-	// router.HandlerFunc(http.MethodGet,"/v1/groups/:group_id/balance", )
+	router.HandlerFunc(http.MethodPost, "/v1/tokens/authentication", app.createAuthenticationTokenHandler)
 
 	return app.recoverPanic(app.rateLimit(app.authenticate(router)))
 }
