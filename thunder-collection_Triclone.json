@@ -1,0 +1,567 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Triclone",
+    "collectionId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+    "dateExported": "2024-09-22T11:30:44.139Z",
+    "version": "1.2",
+    "folders": [
+        {
+            "_id": "f25c78d7-92d6-481f-b65b-9c99c6b335d0",
+            "name": "Users",
+            "containerId": "",
+            "created": "2024-09-19T07:23:51.400Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "41c62344-094e-4a27-a330-3ace292ee380",
+            "name": "Groups",
+            "containerId": "",
+            "created": "2024-09-19T07:34:36.486Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "6f32c8d5-9eba-4ad7-87d4-66f4337045df",
+            "name": "Group Members",
+            "containerId": "",
+            "created": "2024-09-19T08:20:16.462Z",
+            "sortNum": 30000
+        },
+        {
+            "_id": "2a18b374-373a-430c-a59e-6d896f7356aa",
+            "name": "Expenses",
+            "containerId": "",
+            "created": "2024-09-19T15:00:34.363Z",
+            "sortNum": 40000
+        },
+        {
+            "_id": "1077b5d2-ba5a-4b49-a441-1aa46ed0bb58",
+            "name": "Expense Participants",
+            "containerId": "",
+            "created": "2024-09-19T20:13:27.600Z",
+            "sortNum": 50000
+        },
+        {
+            "_id": "9989f190-63e6-44fc-9e55-20b9de858c0e",
+            "name": "Settlements",
+            "containerId": "",
+            "created": "2024-09-20T16:05:41.857Z",
+            "sortNum": 60000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "2d71c88d-3f93-4f5b-98e9-71adb82e3a28",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "f25c78d7-92d6-481f-b65b-9c99c6b335d0",
+            "name": "Get all",
+            "url": "localhost:4000/v1/users",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-09-19T07:23:58.251Z",
+            "modified": "2024-09-19T07:24:05.151Z",
+            "headers": []
+        },
+        {
+            "_id": "bea6ffca-98e4-48ce-adc0-fcba3f3a24f5",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "6f32c8d5-9eba-4ad7-87d4-66f4337045df",
+            "name": "Insert to Group",
+            "url": "localhost:4000/v1/groups/2/members",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-09-19T08:20:08.419Z",
+            "modified": "2024-09-22T09:53:48.457Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "5OE2UJHNA5EDJYJU7MFQVSZ62Q"
+            }
+        },
+        {
+            "_id": "63e046d4-8c85-486f-84c6-3d57ae3262b5",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "f25c78d7-92d6-481f-b65b-9c99c6b335d0",
+            "name": "Get by Id",
+            "url": "localhost:4000/v1/users/2",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-09-19T07:24:12.382Z",
+            "modified": "2024-09-19T07:33:45.840Z",
+            "headers": []
+        },
+        {
+            "_id": "843eb34e-f45f-407d-b465-a366c8ac4b46",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "f25c78d7-92d6-481f-b65b-9c99c6b335d0",
+            "name": "Create User",
+            "url": "localhost:4000/v1/users",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-09-19T07:24:29.971Z",
+            "modified": "2024-09-19T07:25:13.240Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"Edu Senra\",\n  \"email\":\"edusenra@gmail.com\",\n  \"password\":\"edusenra\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "b06daab6-0363-4a91-9936-b255375fc27d",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "f25c78d7-92d6-481f-b65b-9c99c6b335d0",
+            "name": "Activate User",
+            "url": "localhost:4000/v1/users/activated",
+            "method": "PUT",
+            "sortNum": 40000,
+            "created": "2024-09-19T07:25:29.090Z",
+            "modified": "2024-09-22T09:53:28.477Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"token\":\"UROVYM2DRYTR47MZXOQAVYXVHA\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "14382eab-d8cd-41c9-ae12-ffdb1c8eb1ef",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "f25c78d7-92d6-481f-b65b-9c99c6b335d0",
+            "name": "Update User",
+            "url": "localhost:4000/v1/users/5",
+            "method": "PATCH",
+            "sortNum": 50000,
+            "created": "2024-09-19T07:27:45.126Z",
+            "modified": "2024-09-19T07:33:41.310Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"salxixoncito\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "JATRFPSJSTIALJDV7FCJSIQGRI"
+            },
+            "preReq": {
+                "options": {
+                    "skipRequest": true
+                }
+            }
+        },
+        {
+            "_id": "504c93eb-3015-41c9-8738-598b23223b75",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "",
+            "name": "Get Auth",
+            "url": "localhost:4000/v1/tokens/authentication",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2024-09-19T07:28:22.840Z",
+            "modified": "2024-09-22T09:53:39.977Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\":\"edusenra@gmail.com\",\n  \"password\":\"edusenra\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "3e45126f-2973-41dd-b20d-88f3164bb464",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "f25c78d7-92d6-481f-b65b-9c99c6b335d0",
+            "name": "Delete User",
+            "url": "localhost:4000/v1/users/5",
+            "method": "DELETE",
+            "sortNum": 60000,
+            "created": "2024-09-19T07:33:58.502Z",
+            "modified": "2024-09-19T07:34:23.700Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "JATRFPSJSTIALJDV7FCJSIQGRI"
+            },
+            "preReq": {
+                "options": {
+                    "skipRequest": true
+                }
+            }
+        },
+        {
+            "_id": "05414f4c-9849-4c9f-b243-3603fcf4a71f",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "41c62344-094e-4a27-a330-3ace292ee380",
+            "name": "List Groups",
+            "url": "localhost:4000/v1/groups",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2024-09-19T07:35:35.646Z",
+            "modified": "2024-09-19T08:24:11.290Z",
+            "headers": []
+        },
+        {
+            "_id": "5f9faab7-9899-41f3-a7da-e579aa77b542",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "41c62344-094e-4a27-a330-3ace292ee380",
+            "name": "Get Group by Id",
+            "url": "localhost:4000/v1/groups/1",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2024-09-19T07:35:46.443Z",
+            "modified": "2024-09-19T07:37:28.480Z",
+            "headers": []
+        },
+        {
+            "_id": "6972816a-71b8-4f25-be00-300a7aab6221",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "41c62344-094e-4a27-a330-3ace292ee380",
+            "name": "Create Group",
+            "url": "localhost:4000/v1/groups",
+            "method": "POST",
+            "sortNum": 90000,
+            "created": "2024-09-19T07:35:52.458Z",
+            "modified": "2024-09-19T07:40:35.610Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"viaje pingo\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "UTVDI3HQFF4LVJLVFCXZZUVBQY"
+            }
+        },
+        {
+            "_id": "8194318f-eb9b-4dbd-a481-458643756f8a",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "41c62344-094e-4a27-a330-3ace292ee380",
+            "name": "Update Group",
+            "url": "localhost:4000/v1/groups/3",
+            "method": "PATCH",
+            "sortNum": 100000,
+            "created": "2024-09-19T07:36:00.319Z",
+            "modified": "2024-09-19T07:43:06.230Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"viaje plan\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "UTVDI3HQFF4LVJLVFCXZZUVBQY"
+            }
+        },
+        {
+            "_id": "63734cd3-f86f-46cf-ae1c-08086e1672b0",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "41c62344-094e-4a27-a330-3ace292ee380",
+            "name": "Delete Group",
+            "url": "localhost:4000/v1/groups/3",
+            "method": "DELETE",
+            "sortNum": 110000,
+            "created": "2024-09-19T07:36:05.023Z",
+            "modified": "2024-09-19T07:46:37.230Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "UTVDI3HQFF4LVJLVFCXZZUVBQY"
+            }
+        },
+        {
+            "_id": "bcef1db0-892b-4969-ac3d-5fc810afa477",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "6f32c8d5-9eba-4ad7-87d4-66f4337045df",
+            "name": "Get Members from Group",
+            "url": "localhost:4000/v1/groups/2/members",
+            "method": "GET",
+            "sortNum": 130000,
+            "created": "2024-09-19T09:08:58.272Z",
+            "modified": "2024-09-19T20:33:40.982Z",
+            "headers": []
+        },
+        {
+            "_id": "f4a4a61f-9d2b-482e-9a43-7dcc001a8899",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "6f32c8d5-9eba-4ad7-87d4-66f4337045df",
+            "name": "Delete from Group",
+            "url": "localhost:4000/v1/groups/2/members/5",
+            "method": "DELETE",
+            "sortNum": 140000,
+            "created": "2024-09-19T09:20:03.898Z",
+            "modified": "2024-09-19T09:26:10.380Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "F57ES2EI4KNIR2PR3GJZQV3TVU"
+            }
+        },
+        {
+            "_id": "ff0e8cde-73c4-48ba-ac97-6c82d435ec3b",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "2a18b374-373a-430c-a59e-6d896f7356aa",
+            "name": "Create Expense",
+            "url": "localhost:4000/v1/groups/2/expenses",
+            "method": "POST",
+            "sortNum": 150000,
+            "created": "2024-09-19T15:00:46.341Z",
+            "modified": "2024-09-22T11:04:33.807Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"amount\":200.0,\n  \"description\":\"gastos varios\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "5OE2UJHNA5EDJYJU7MFQVSZ62Q"
+            }
+        },
+        {
+            "_id": "56842957-4603-4e0f-bcf6-6fa07dc82908",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "6f32c8d5-9eba-4ad7-87d4-66f4337045df",
+            "name": "Reinstate Member",
+            "url": "localhost:4000/v1/groups/2/members/5/",
+            "method": "PUT",
+            "sortNum": 160000,
+            "created": "2024-09-19T15:09:39.956Z",
+            "modified": "2024-09-19T15:10:15.155Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "F57ES2EI4KNIR2PR3GJZQV3TVU"
+            }
+        },
+        {
+            "_id": "8e01a132-dfab-441f-a3f9-48c4eb165719",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "2a18b374-373a-430c-a59e-6d896f7356aa",
+            "name": "Get all Expenses from Group",
+            "url": "localhost:4000/v1/groups/2/expenses",
+            "method": "GET",
+            "sortNum": 170000,
+            "created": "2024-09-19T15:25:18.361Z",
+            "modified": "2024-09-22T11:04:22.017Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "5OE2UJHNA5EDJYJU7MFQVSZ62Q"
+            }
+        },
+        {
+            "_id": "c690bd4f-6ff3-417a-8a17-87e830a8ed37",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "2a18b374-373a-430c-a59e-6d896f7356aa",
+            "name": "Get expense",
+            "url": "localhost:4000/v1/groups/2/expenses/4",
+            "method": "GET",
+            "sortNum": 180000,
+            "created": "2024-09-19T15:50:04.405Z",
+            "modified": "2024-09-22T09:39:34.507Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "KALLJ36AL26KMIZ5I4HLNIYXE4"
+            }
+        },
+        {
+            "_id": "95dfd245-625d-4c5a-8ae8-aa3caa425221",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "2a18b374-373a-430c-a59e-6d896f7356aa",
+            "name": "Update expense",
+            "url": "localhost:4000/v1/groups/2/expenses/4",
+            "method": "PUT",
+            "sortNum": 190000,
+            "created": "2024-09-19T16:11:18.783Z",
+            "modified": "2024-09-19T16:13:06.530Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"description\":\"gastos mallorca\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "F57ES2EI4KNIR2PR3GJZQV3TVU"
+            }
+        },
+        {
+            "_id": "21b31e67-6b7d-49e5-ae78-a03f74297558",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "2a18b374-373a-430c-a59e-6d896f7356aa",
+            "name": "Delete expense",
+            "url": "localhost:4000/v1/groups/2/expenses/4",
+            "method": "DELETE",
+            "sortNum": 200000,
+            "created": "2024-09-19T16:22:08.738Z",
+            "modified": "2024-09-19T16:22:24.857Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "F57ES2EI4KNIR2PR3GJZQV3TVU"
+            }
+        },
+        {
+            "_id": "b2b4ef88-3bc8-4985-a74f-51c309c3328b",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "1077b5d2-ba5a-4b49-a441-1aa46ed0bb58",
+            "name": "Get all from expense",
+            "url": "localhost:4000/v1/groups/2/expenses/4/participants",
+            "method": "GET",
+            "sortNum": 210000,
+            "created": "2024-09-19T20:13:34.660Z",
+            "modified": "2024-09-22T11:04:55.427Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "5OE2UJHNA5EDJYJU7MFQVSZ62Q"
+            }
+        },
+        {
+            "_id": "ad543497-591f-4a4c-ba30-1b4b61b433ee",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "1077b5d2-ba5a-4b49-a441-1aa46ed0bb58",
+            "name": "Insert many into expense",
+            "url": "localhost:4000/v1/groups/2/expenses/4/participants",
+            "method": "POST",
+            "sortNum": 220000,
+            "created": "2024-09-19T20:33:19.376Z",
+            "modified": "2024-09-22T11:04:46.087Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "[\n  {\n  \"user_id\":5,\n  \"amount_owed\":40\n  },\n  {\n    \"user_id\":2,\n    \"amount_owed\":100\n  },\n  {\n    \"user_id\":4,\n    \"amount_owed\":60\n  }\n]",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "5OE2UJHNA5EDJYJU7MFQVSZ62Q"
+            }
+        },
+        {
+            "_id": "b6032d0d-e674-4b9a-aa97-89ac62b77189",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "1077b5d2-ba5a-4b49-a441-1aa46ed0bb58",
+            "name": "Update expense participant (amount owed)",
+            "url": "localhost:4000/v1/groups/2/expenses/3/participants/9",
+            "method": "PUT",
+            "sortNum": 230000,
+            "created": "2024-09-20T08:18:39.368Z",
+            "modified": "2024-09-20T08:19:10.344Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"amount_owed\":60\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "PARMYQDC6LGZR2PGXZXBBVXPEI"
+            }
+        },
+        {
+            "_id": "d1c12a9b-faf3-4bbb-b232-812d4a2af5e8",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "1077b5d2-ba5a-4b49-a441-1aa46ed0bb58",
+            "name": "Remove participant",
+            "url": "localhost:4000/v1/groups/2/expenses/3/participants/9",
+            "method": "DELETE",
+            "sortNum": 240000,
+            "created": "2024-09-20T08:19:24.475Z",
+            "modified": "2024-09-20T08:19:31.794Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "PARMYQDC6LGZR2PGXZXBBVXPEI"
+            }
+        },
+        {
+            "_id": "0804e192-9146-44c4-9edf-4961b2403cfc",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "9989f190-63e6-44fc-9e55-20b9de858c0e",
+            "name": "Get All",
+            "url": "localhost:4000/v1/groups/2/settlements",
+            "method": "GET",
+            "sortNum": 250000,
+            "created": "2024-09-20T16:05:46.853Z",
+            "modified": "2024-09-22T11:05:06.629Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "5OE2UJHNA5EDJYJU7MFQVSZ62Q"
+            }
+        },
+        {
+            "_id": "85c14dfc-65cf-4827-919e-826306e736c8",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "9989f190-63e6-44fc-9e55-20b9de858c0e",
+            "name": "Get by id",
+            "url": "localhost:4000/v1/groups/2/settlements/2",
+            "method": "GET",
+            "sortNum": 260000,
+            "created": "2024-09-20T16:06:10.045Z",
+            "modified": "2024-09-20T16:06:22.518Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "5J2WUNEGRY3MFGK4FNAGSL4LYY"
+            }
+        },
+        {
+            "_id": "fbf24716-ec43-4c7a-87ba-1c546a967d39",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "9989f190-63e6-44fc-9e55-20b9de858c0e",
+            "name": "Create settlement",
+            "url": "localhost:4000/v1/groups/2/settlements/",
+            "method": "POST",
+            "sortNum": 270000,
+            "created": "2024-09-20T16:06:39.679Z",
+            "modified": "2024-09-20T16:10:09.718Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"payer_id\":2,\n  \"payee_id\":4,\n  \"amount\":100\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "5J2WUNEGRY3MFGK4FNAGSL4LYY"
+            }
+        },
+        {
+            "_id": "97e68b98-960f-426e-89db-9e7ad22e1dcb",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "9989f190-63e6-44fc-9e55-20b9de858c0e",
+            "name": "Delete settlement",
+            "url": "localhost:4000/v1/groups/2/settlements/5",
+            "method": "DELETE",
+            "sortNum": 280000,
+            "created": "2024-09-20T16:10:49.472Z",
+            "modified": "2024-09-20T16:10:59.958Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "5J2WUNEGRY3MFGK4FNAGSL4LYY"
+            }
+        },
+        {
+            "_id": "a4274fcf-c090-4913-aa3c-9cc82c3f0c0f",
+            "colId": "8cbdbb1d-fd7c-4e8c-bc7f-255d439ed435",
+            "containerId": "",
+            "name": "Get balance",
+            "url": "localhost:4000/v1/groups/2/balance",
+            "method": "GET",
+            "sortNum": 290000,
+            "created": "2024-09-22T09:40:37.372Z",
+            "modified": "2024-09-22T09:53:57.477Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "5OE2UJHNA5EDJYJU7MFQVSZ62Q"
+            }
+        }
+    ],
+    "ref": "P1lrc2Dl3IMe6oWvZMz0cRTskQXNQqi84uvC59XSD41yJkMqyCEMd06kNw065tEfmCl7aoCUcvpUPIlKM3A8ag"
+}
