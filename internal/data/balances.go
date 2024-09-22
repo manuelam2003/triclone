@@ -1,6 +1,9 @@
 package data
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+)
 
 type Balance struct {
 	UserID  int64   `json:"user_id"`
@@ -12,16 +15,14 @@ type BalanceModel struct {
 }
 
 func (m BalanceModel) CalculateGroupBalances(groupID int64) ([]Balance, error) {
-	// Query to calculate the total amount each user owes based on expenses
 	expensesQuery := `
-        SELECT p.user_id, SUM(p.amount_owed) AS total_owed
+        SELECT e.id, e.paid_by, p.user_id, SUM(p.amount_owed) AS total_owed, e.amount AS total_paid
         FROM expense_participants p
         INNER JOIN expenses e ON p.expense_id = e.id
         WHERE e.group_id = $1
-        GROUP BY p.user_id
+        GROUP BY e.id, e.paid_by, p.user_id, e.amount
     `
 
-	// Query to calculate the total settled amounts for each user
 	settlementsQuery := `
         SELECT s.payer_id, s.payee_id, SUM(s.amount) AS settled_amount
         FROM settlements s
@@ -29,6 +30,7 @@ func (m BalanceModel) CalculateGroupBalances(groupID int64) ([]Balance, error) {
         GROUP BY s.payer_id, s.payee_id
     `
 
+	processedExpenses := make(map[int64]struct{}) // Set to track processed expense IDs
 	expenseMap := make(map[int64]float64)
 	var balances []Balance
 
@@ -40,13 +42,26 @@ func (m BalanceModel) CalculateGroupBalances(groupID int64) ([]Balance, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var userID int64
-		var totalOwed float64
-		if err := rows.Scan(&userID, &totalOwed); err != nil {
+		var expenseID, paidByUserID, participantUserID int64
+		var totalOwed, totalPaid float64
+		if err := rows.Scan(&expenseID, &paidByUserID, &participantUserID, &totalOwed, &totalPaid); err != nil {
 			return nil, err
 		}
-		expenseMap[userID] = totalOwed
+
+		fmt.Printf("Expense: %d, Paid by: %d, User id: %d, Total owed: %.2f, Total amount: %.2f\n", expenseID, paidByUserID, participantUserID, totalOwed, totalPaid)
+
+		// Increase the balance of the participants by what they owe
+		expenseMap[participantUserID] += totalOwed
+
+		if _, exists := processedExpenses[expenseID]; !exists {
+			// Reduce the balance of the person who paid by the full amount of the expense
+			processedExpenses[expenseID] = struct{}{}
+			expenseMap[paidByUserID] -= totalPaid
+			continue
+		}
+
 	}
+	fmt.Println(expenseMap)
 
 	// Query settlements and adjust balances
 	rows, err = m.DB.Query(settlementsQuery, groupID)
